@@ -4,6 +4,14 @@ CHANGELOG
 This project uses `semantic versioning <http://semver.org/>`_.
 This change log uses principles from `keep a changelog <http://keepachangelog.com/>`_.
 
+[0.4.02]
+-------
+
+Changed
+^^^^^^^
+
+- Swicthed from default flask JWT authentication to ``dservercore`` customized authentication
+
 [0.4.1]
 -------
 
