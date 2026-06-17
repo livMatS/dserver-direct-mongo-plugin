@@ -4,6 +4,19 @@ CHANGELOG
 This project uses `semantic versioning <http://semver.org/>`_.
 This change log uses principles from `keep a changelog <http://keepachangelog.com/>`_.
 
+[Unreleased]
+-----------
+
+Changed
+^^^^^^^
+
+- Switched build system from ``setuptools``/``setuptools_scm`` to ``flit_scm``.
+- Modernized CI workflows: bumped GitHub Actions, Python (3.10-3.13) and
+  MongoDB (6.0-8.0) test matrices, and targeted the ``jic-dtool`` plugin
+  repositories.
+- Declared ``requires-python = ">=3.10"`` and added explicit ``pymongo``
+  dependency.
+
 [0.4.02]
 -------
 

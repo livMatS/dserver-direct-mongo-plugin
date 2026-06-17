@@ -43,7 +43,7 @@ class NoDatesSafeLoader(yaml.SafeLoader):
         go on to serialise as json which doesn't have the advanced types
         of yaml, and leads to incompatibilities down the track.
         """
-        if not 'yaml_implicit_resolvers' in cls.__dict__:
+        if 'yaml_implicit_resolvers' not in cls.__dict__:
             cls.yaml_implicit_resolvers = cls.yaml_implicit_resolvers.copy()
 
         for first_letter, mappings in cls.yaml_implicit_resolvers.items():
@@ -59,28 +59,31 @@ def config_to_dict(username):
     return Config.to_dict()
 
 
+def _sanitise(query_dict):
+    for key in list(query_dict.keys()):
+        if key not in VALID_MONGO_QUERY_KEYS:
+            del query_dict[key]
+    for lk in MONGO_QUERY_LIST_KEYS:
+        if lk in query_dict:
+            if len(query_dict[lk]) == 0:
+                del query_dict[lk]
+
+
+def _deal_with_possible_or_statment(a_list, key):
+    if len(a_list) == 1:
+        return {key: a_list[0]}
+    else:
+        return {"$or": [{key: v} for v in a_list]}
+
+
+def _deal_with_possible_and_statement(a_list, key):
+    if len(a_list) == 1:
+        return {key: a_list[0]}
+    else:
+        return {key: {"$all": a_list}}
+
+
 def _dict_to_mongo(query_dict):
-    def _sanitise(query_dict):
-        for key in list(query_dict.keys()):
-            if key not in VALID_MONGO_QUERY_KEYS:
-                del query_dict[key]
-        for lk in MONGO_QUERY_LIST_KEYS:
-            if lk in query_dict:
-                if len(query_dict[lk]) == 0:
-                    del query_dict[lk]
-
-    def _deal_with_possible_or_statment(a_list, key):
-        if len(a_list) == 1:
-            return {key: a_list[0]}
-        else:
-            return {"$or": [{key: v} for v in a_list]}
-
-    def _deal_with_possible_and_statement(a_list, key):
-        if len(a_list) == 1:
-            return {key: a_list[0]}
-        else:
-            return {key: {"$all": a_list}}
-
     _sanitise(query_dict)
 
     sub_queries = []
