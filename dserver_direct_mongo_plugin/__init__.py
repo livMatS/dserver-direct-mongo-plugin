@@ -7,7 +7,7 @@ try:
     __version__ = version(__name__)
 except PackageNotFoundError:
     # package is not installed
-   pass
+    pass
 
 import pymongo
 import dtoolcore.utils as core_utils
@@ -16,7 +16,6 @@ import dservercore.utils as server_utils
 from flask import (
     abort,
     jsonify,
-    request,
     current_app,
 )
 
@@ -193,8 +192,8 @@ class DirectMongoExtension(ExtensionABC):
     def init_app(self, app):
         try:
             self._mongo_uri = app.config["MONGO_URI"]
-            DirectMongoExtension.client = MongoClient(self._mongo_uri,
-                                      uuidRepresentation='standard')
+            DirectMongoExtension.client = MongoClient(
+                self._mongo_uri, uuidRepresentation='standard')
         except KeyError:
             raise(RuntimeError("Please set the MONGO_URI environment variable"))  # NOQA
 
