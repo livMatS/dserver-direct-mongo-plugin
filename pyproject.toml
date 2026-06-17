@@ -1,20 +1,22 @@
 [build-system]
-requires = ["setuptools>=42", "setuptools_scm[toml]>=6.3"]
-build-backend = "setuptools.build_meta"
+requires = ["flit_scm"]
+build-backend = "flit_scm:buildapi"
 
 [project]
 name = "dserver-direct-mongo-plugin"
 description = "This plugin allows to submit mongo queries and aggregation pipelines directly an underlying MongoDB."
 readme = "README.rst"
-license = {file = "LICENSE"}
+license = {text = "MIT"}
 authors = [
     {name = "Johannes L. Hörmann", email = "johannes.laurin@gmail.com"},
 ]
 dynamic = ["version"]
+requires-python = ">=3.10"
 dependencies = [
-        "dtoolcore>=3.18.0",
-        "dservercore>0.18.0",
-    ]
+    "dtoolcore>=3.18.0",
+    "dservercore>=0.20.0",
+    "pymongo",
+]
 
 [project.optional-dependencies]
 test = [
@@ -30,13 +32,17 @@ Documentation = "https://dserver-direct-mongo-plugin.readthedocs.io"
 Repository = "https://github.com/livMatS/dserver-direct-mongo-plugin"
 Changelog = "https://github.com/livMatS/dserver-direct-mongo-plugin/blob/main/CHANGELOG.rst"
 
+[project.entry-points."dservercore.extension"]
+DirectMongoExtension = "dserver_direct_mongo_plugin:DirectMongoExtension"
+
+[tool.flit.module]
+name = "dserver_direct_mongo_plugin"
+
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 write_to = "dserver_direct_mongo_plugin/version.py"
 
-[tool.setuptools]
-packages = ["dserver_direct_mongo_plugin"]
-
-[project.entry-points."dservercore.extension"]
-"DirectMongoExtension" = "dserver_direct_mongo_plugin:DirectMongoExtension"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=dserver_direct_mongo_plugin --cov-report=term-missing"
